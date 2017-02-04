@@ -12065,7 +12065,7 @@ WTAAJKlRBoAkNcoAkKRGGQCS1CgDQJIaZQBIUqMMAElq1P8DIHjSuJtvMNAAAAAASUVORK5CYII=
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[148]:</div>
+<div class="prompt input_prompt">In&nbsp;[1]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">cv2</span>
@@ -12081,6 +12081,10 @@ WTAAJKlRBoAkNcoAkKRGGQCS1CgDQJIaZQBIUqMMAElq1P8DIHjSuJtvMNAAAAAASUVORK5CYII=
         <span class="n">img</span> <span class="o">=</span> <span class="n">clahe</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">img</span>
 <span class="kn">import</span> <span class="nn">argparse</span>
+
+<span class="c1"># image normalization</span>
+<span class="k">def</span> <span class="nf">normalize</span><span class="p">(</span><span class="n">image</span><span class="p">):</span>
+    <span class="n">image</span> <span class="o">=</span> 
 <span class="c1"># adjust brightness</span>
 <span class="k">def</span> <span class="nf">adjust_gamma</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
 	<span class="n">invGamma</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">gamma</span>
@@ -12090,6 +12094,26 @@ WTAAJKlRBoAkNcoAkKRGGQCS1CgDQJIaZQBIUqMMAElq1P8DIHjSuJtvMNAAAAAASUVORK5CYII=
 </pre></div>
 
 </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt"></div>
+
+<div class="output_subarea output_text output_error">
+<pre>
+<span class="ansi-cyan-fg">  File </span><span class="ansi-green-fg">&#34;&lt;ipython-input-1-6ad692ee6c9c&gt;&#34;</span><span class="ansi-cyan-fg">, line </span><span class="ansi-green-fg">18</span>
+<span class="ansi-red-fg">    def adjust_gamma(image, gamma=1.0):</span>
+      ^
+<span class="ansi-red-fg">IndentationError</span><span class="ansi-red-fg">:</span> expected an indented block
+</pre>
+</div>
+</div>
+
 </div>
 </div>
 
@@ -12592,8 +12616,8 @@ SUVORK5CYII=
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><strong>Answer:</strong>
-I tried several preprocessing methods, including normalization, equalization and</p>
+<p><strong>Answer:</strong></p>
+<p>I tried several preprocessing methods, including normalization,histogram equalization and change color space, but neither of them helps in my model. But I still retains the method of equalization, because it seems some of the images are pretty dark, I used it as a augmentation method for those images whose count is quite small. I also tried change to grayscale, the model runs pretty fast, but it doesn't help due to the reason that some of the signs can only tell apart by color.</p>
 
 </div>
 </div>
