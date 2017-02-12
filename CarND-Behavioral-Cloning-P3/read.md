@@ -33,7 +33,7 @@ For testing model, you can use the model here, model.h5, and use the drive.py pr
 python drive.py model.h5 run1
 ```
 
-##Preprocessing Strategy
+##Preprocessing
 
 For behavioral cloning task, data plays an essential rule that it can directly influence the result of out model. First, we must ensure that the label for each data is correct, only in this way can the network learns something useful. For this particular project, it is natural to treat it as a regression problem (we may also transfer it to a classification problem). The data is a 2D RGB image, the label for that image data is the steering angle at the same timestamp. But, usually it is very hard to collect smooth steering angles because of the data collecting process, so one thing we can do to alleviate this is to do exponential smoothing for the training steer angles.
 
@@ -64,6 +64,10 @@ Left: 0.0141            |  Center  :0.1641 |  Right : 0.3141
 :-------------------------------------:|:-----------------------------------------:|:-------------------------------------:
 ![Sample Left](examples/left_resize.png) | ![Sample Center](examples/center_resize.png)|![Sample Right](examples/right_resize.png)
 
+Note that data collected is unbalanced because much of time we are driving in a line, the 0 seems dominate the angle dataset. Training using the original dataset may be proned to predict for image with smaller angles compared to its true value, we need to modify the data set somehow. Here I randomly drop intervals which contains far more data than others.
+
+![Sample Left](examples/origin_dist.png) ![Sample Left](examples/dist.png)
+
 All previous processing can be done on the disk or seperately from the training process. There are other random methods that can augment the training dataset during the training process. Data augmentation can be treated as a way of preprocessing only on training dataset, and it can greatly reduce the generalization error when applied correctly.
 
 
@@ -81,3 +85,9 @@ In many application of computer vision, rotate and transformation is pretty usef
 
 
 ![Sample Left](examples/augmented.png)
+
+## Model and Training
+
+I tried several models, like those famous one, VGG16, Comma.ai's model and Nvidia's model VGG16's models seems too large for my dataset, it is likely to overfitting. After some trials, Nvidia's net works pretty well. I just added one additional layer at the begining, it's a 1x1 filter works like a color transformer, which can tranfer the color space of the input images. The network has 252231 parameters, which is large enough for our purpose, actually it is overfitting at first, so I add a dropout layer after every fully connected layer, which add a regulizer to out model and can force the model to has smaller generalization error. But we import another hyperparameter, the dropout layer, we have to careful with this, it can't too large or too small. 
+
+For the nonlinear activation, I chose the popular RELU, which can avoid some problems like gradient vanishing or exploding. There are more fancy activation function like Leaky Relu, but it didn't improve the model too much. I used for Adam optimizer for opmization, this is also a common used optimizer which can change its learning rate along each direction in the gradient, this also can alleviate our pain from choosing proper starting learning rate. I chose the 1e-4 and also add the learning rate schedule, hope this can improve the error performance. The metric is the simple MSE, but the MSE is not really the best way to quantifying our model's performance on the simulator. For example, we may have 99 angles near 0, only one with 1, you will get a very low mse, but the error occurs at the extreme angle will lead our car go off the road. So maybe we can assign more penalty on those points. Set the potential problem aside, we have another hyperparameter to choose, the training batch size and training epochs. Small batch size can offer regularizing effects due to the noise they add, but they lack stability because of the high variance when calculating the gradient, thus this requires a tradeoff, I chose 512 in my training. And I utilized the early stopping strategy to chose the epoces, but too much epoches is bad for real time simulation performance, I also add an upper bound 10 for number of epoches.
