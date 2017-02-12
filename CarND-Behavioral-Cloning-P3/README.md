@@ -12,7 +12,8 @@ Brief summary of this repository:
 * `video.py` : create a video of images within one directory
 * `model.py` : contains the model structure and training code
 * `reader.py`  : contains the class and preprocessing of input images
-
+* `src`: train notebook, just for reference
+* `examples` : images for this readme file
 
 ## Dependencies
 This lab requires:
@@ -23,9 +24,9 @@ The lab enviroment can be created with CarND Term1 Starter Kit. Click [here](htt
 
 ## Usage
 For traing model, you need to create a directory, you can name it as 'data', which contains a driving log file and a directory contains all the images.
-following command:
+suppose the log's name is driving_log.csv
 ```sh
-model.save(filepath)
+python model.py --log driving_log.csv --batch_size 256 --learning_rate 0.0001
 ```
 
 For testing model, you can use the model here, model.h5, and use the drive.py provided by Udacity to test for real time simulation, also you need the simulator turned on.
