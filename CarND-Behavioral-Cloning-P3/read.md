@@ -68,6 +68,7 @@ All previous processing can be done on the disk or seperately from the training 
 
 
 We can find that images has different light conditons, so we can randomly modify the brightness and contrast of the images each time we read them. I utilized two method, one is gamma adjustment, which can modify the brightness and contrast at the same time. Another way is to do modification is HSV color space and change brightness. 
+
 Left                      |  Center                                   |  Right
 :-------------------------------------:|:-----------------------------------------:|:-------------------------------------:
 ![Sample Left](examples/left_gamma.png) | ![Sample Center](examples/cneter_gamma.png)|![Sample Right](examples/right_gamma.png)
