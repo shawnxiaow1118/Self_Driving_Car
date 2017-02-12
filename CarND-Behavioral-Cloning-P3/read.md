@@ -1,5 +1,4 @@
 # Project 3: Use Deep Learning to Clone Driving Behavior
-
 Overview
 -----
 This repository is for the third project of Udacity Self Driving Car, Driving Behavior Clone. In general, we will train a deep neural network to predict for the steering angle of the car given the center image within a video stream. For the training data, Udacity provides an excellent simulator, in which we can collect data for training and test our learned models.
@@ -15,14 +14,14 @@ Brief summary of this repository:
 * `reader.py`  : contains the class and preprocessing of input images
 
 
-# Dependencies
+## Dependencies
 This lab requires:
 
 * [CarND Term1 Starter Kit](https://github.com/udacity/CarND-Term1-Starter-Kit)
 
 The lab enviroment can be created with CarND Term1 Starter Kit. Click [here](https://github.com/udacity/CarND-Term1-Starter-Kit/blob/master/README.md) for the details.
 
-# Usage
+## Usage
 For traing model, you need to create a directory, you can name it as 'data', which contains a driving log file and a directory contains all the images.
 following command:
 ```sh
@@ -34,25 +33,41 @@ For testing model, you can use the model here, model.h5, and use the drive.py pr
 python drive.py model.h5 run1
 ```
 
-#PreProcessing Strategy
+##Preprocessing Strategy
 
 For behavioral cloning task, data plays an essential rule that it can directly influence the result of out model. First, we must ensure that the label for each data is correct, only in this way can the network learns something useful. For this particular project, it is natural to treat it as a regression problem (we may also transfer it to a classification problem). The data is a 2D RGB image, the label for that image data is the steering angle at the same timestamp. But, usually it is very hard to collect smooth steering angles because of the data collecting process, so one thing we can do to alleviate this is to do exponential smoothing for the training steer angles.
 
 ![Sample Left](examples/angles.png)
 
+There a lot of thing we can do to deal with the input images. The original image shape is 320x160, but not all of them are useful for this project, we can safely drop the upper part of the image because for predicting steer angles, we are actually look at the lane and board of the road, the upper part usually contains sky and other noisy information, which are harmful for the training. The image after croppedis of size 100x320.
 
 Left:  -0.0141                            |  Center   :-0.1641                              |  Right:-0.3141
 :-------------------------------------:|:-----------------------------------------:|:-------------------------------------:
 ![Sample Left](examples/left_origin.png) | ![Sample Center](examples/center_origin.png)|![Sample Right](examples/right_origin.png)
 
+There are three cameras on the car for data collection, center left and right.Thus we have 3 images at the same time stamp, but we only have one steering angle at this time. Assume using center image as benchmark to the system,so one problem here is how get the accurate angles for left and right images. The best way to do this is using perspective transformation mentioned by NVIDIA's [End to End Learning for Self-Driving Cars](https://arxiv.org/pdf/1604.07316.pdf) and CMU's pioneering work on [
+ALVINN, an autonomous land vehicle in a neural network](http://repository.cmu.edu/cgi/viewcontent.cgi?article=2874&context=compsci). But the accurate transformation need some parameters, like the distance between cameras and each camera's heading as well as the intrinsic parameters of the camera itself, which are all hard to collect for this simulator. But we can simply add some angles to left images and subtract the same amount for right images to approximate this transformation. By trial and error and small analysis, the `0.15` works pretty well for my implementation.
+
 Left: -0.0141                       |  Center  :-0.1641 |  Right :-0.3141
 :-------------------------------------:|:-----------------------------------------:|:-------------------------------------:
 ![Sample Left](examples/left_del.png) | ![Sample Center](examples/center_del.png)|![Sample Right](examples/right_del.png)
+
+Inspired by the idea that we can get more samples by modifying images and get the correspoding steering angles, the flip operation is another simple way to augment dataset. We assume the horizontally flipped image has the opposite angles compared tp original angles. By saying opposite angle we simply means take negative of the origianl value.
 
 Left: 0.0141            |  Center  :0.1641 |  Right : 0.3141
 :-------------------------------------:|:-----------------------------------------:|:-------------------------------------:
 ![Sample Left](examples/left_del_flip.png) | ![Sample Center](examples/center_del_flip.png)|![Sample Right](examples/right_del_flip.png)
 
+I also resized the image to size 66x200, I just resized to fit to the network of Nvidia's work, I resize them to different sizes when testing other methods. Also we need to normalize the value of input image within the range `[0,1]`(didn't show this as images).
+
+Left: 0.0141            |  Center  :0.1641 |  Right : 0.3141
+:-------------------------------------:|:-----------------------------------------:|:-------------------------------------:
+![Sample Left](examples/left_resize.png) | ![Sample Center](examples/center_resize.png)|![Sample Right](examples/right_resize.png)
+
+All previous processing can be done on the disk or seperately from the training process. There are other random methods that can augment the training dataset during the training process. Data augmentation can be treated as a way of preprocessing only on training dataset, and it can greatly reduce the generalization error when applied correctly.
+
+
+We can find that images has different light conditons, so we can randomly modify the brightness and contrast of the images each time we read them. I utilized two method, one is gamma adjustment, which can modify the brightness and contrast at the same time. Another way is to do modification is HSV color space and change brightness. 
 Left                      |  Center                                   |  Right
 :-------------------------------------:|:-----------------------------------------:|:-------------------------------------:
 ![Sample Left](examples/left_gamma.png) | ![Sample Center](examples/cneter_gamma.png)|![Sample Right](examples/right_gamma.png)
@@ -61,4 +76,7 @@ Left                       |  Center                     �
 :-------------------------------------:|:-----------------------------------------:|:-------------------------------------:
 ![Sample Left](examples/left_bright.png) | ![Sample Center](examples/center_bright.png)|![Sample Right](examples/right_bright.png)
 
-There a lot of thing we can do to deal with the input images. The original image shape is 320x160, but not all of them are useful for this project, we can safely drop the upper part of the image because for predicting steer angles, we are actually look at the lane and board of the road, the upper part usually contains sky and other noisy information, which are harmful for the training. The image after croppedis of size 50x
+In many application of computer vision, rotate and transformation is pretty useful. We want use them as well here, so the same problem mentioned before, how to change the angle correctly, the best way is perspective transformation, which is hard to implement and may also need the speed information(like when see image extreme, how long you want to recover back to the normal). But we can again approximate this, at last I chose +0.04 for horizontal shift to left per pixel and -0.04 for right shift. The vertical shift can be seen as hillside view. The approximation is really coarse, its error will be not acceptable with too large shift, so we must be careful with this. The correspoding angle for the image below is -0.2801.
+
+
+![Sample Left](examples/augmented.png)
