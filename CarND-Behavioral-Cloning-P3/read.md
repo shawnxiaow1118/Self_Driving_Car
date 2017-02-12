@@ -98,3 +98,28 @@ For the nonlinear activation, I chose the popular RELU, which can avoid some pro
 
 The model summarize in keras is:
 
+|Layer (type)             |        Output Shape    |      Param #  |  Connected to |
+|-------------------------|:----------------------:|:-------------:|:-------------:|
+|image (InputLayer)       |    (None, 66, 200, 3)  |       0       | None          |                        
+|color_layer (Convolution2D) |     (None, 66, 200, 3) |   12       |   image[0][0]  |                   
+|conv2 (Convolution2D)            (None, 31, 98, 24) |   1824      |  color_layer[0][0]  |              
+|conv3 (Convolution2D)   |        (None, 14, 47, 36) |   21636     |  conv2[0][0]         |           
+|conv4 (Convolution2D)    |        (None, 5, 22, 48)  |   43248    |   conv3[0][0]         |             
+|conv6 (Convolution2D)      |      (None, 1, 18, 64)  |   36928    |   conv5[0][0]         |             
+|flatten_1 (Flatten)        |      (None, 1152)       |   0        |   conv6[0][0]         |             
+|dense_1 (Dense)          |        (None, 100)       |    115300  |    flatten_1[0][0]    |              
+|dropout_2 (Dropout)       |       (None, 100)        |   0        |   dense_1[0][0]       |             
+|dense_2 (Dense)           |       (None, 50)         |   5050     |   dropout_2[0][0]     |             
+|dropout_3 (Dropout)       |       (None, 50)         |   0        |   dense_2[0][0]       |             
+|dense_3 (Dense)           |       (None, 10)         |   510      |   dropout_3[0][0]     |             
+|dense_4 (Dense)           |       (None, 1)          |   11       |   dense_3[0][0]       |  
+
+The total parameter is 252231. The first several CNN works as features extracter, and use followed fully connected struture to do nonlinear regression. 
+
+The input data has 13403 cneter images and angles,  after augment left and right camera, together with flip operatiopn and filter for 0 angles, we have 45910 data in total. And I split the dataset into training and validation set, contains 41319 and 4591 seperately. And the validation MSE can get to around 0.0130 after 7-9 epoches. And the correspoding model can works well on first track, but it's not stable for second track for one really large turn on second track. This may due to my coarse approxiamtion and wrong driving input at data collection time.
+
+## Future Work
+
+One thing to is collect information of the cemera in order to get the accurate transformation of the steering angles to augment the dataset. We may also include the speed information into the model because at different speed, we will operate different for the same image input, because we have to estimate the outcome of one particular steering angle. 
+
+The end to end model lack some kind of smoothness, because we assume each image is independent from each other, but this is not the real case. We can simply use exponential smoothing for the output angle. But the RNN is a better natural way to choose from, which take the former input along time axis as well to develop a time dependent model. 
