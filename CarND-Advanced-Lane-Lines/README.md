@@ -74,4 +74,30 @@ Finally, I chose  to combine yellow, white and HLS selector to do the job.
 
 Original    Thresh |  Warped Thresh
 :----------------------------:|:------------------------------:
-![Original](output_images/combined.png)| ![Undistorted](output_images/warped.png) 
+![Binary](output_images/combined.png)| ![Warped](output_images/warped.png) 
+
+
+
+
+
+## Line Finding and Fitting
+Then we need to identify points in the birdside viewed binary image, this was down using a sliding window method. At each step, we identity points to left or right lanes respectivaly by sliding a fixed size window. After finding all points for left and right lines, then we are ready to fit a second order polynomial for each line, which can help us to predict the line position within the image. In the video pipeline, we can save our time to maintain former information, then we can narrow the serach region.
+
+
+Window |  Fitted curve
+:----------------------------:|:------------------------------:
+![Binary](output_images/window.png)| ![Warped](output_images/lines.png) 
+
+
+After this we have some visualization work, first we need to draw the area within two lines with color and then un-warped the colored image as the same view as original image. At last we need to combine original and processed line image to generate good output image.
+
+
+
+
+
+Area |  Unwarped Area  | Combined Image
+:----------------------------:|:------------------------------:|:---------------------:
+![area](output_images/coloredarea.png)| ![unwarped](output_images/unwarpedarea.png)  |![final](output_images/final.png)
+
+
+To get more robust output for the video frame images, we can keep track on the last frames just saw and smoothing the output to get a robust version of detector, which can handle the situation where the lane line is not regular. Also, be careful that there are also some outliers, which means we have to check the new lines we found in each frame, it they are very different in curvature and very far away, then we may have an outlier and we should not use this line , but using the previous lines instead. In my implementation, I utilized a 15 frame memory and made the past poly contribute as much as the new plausible line.
