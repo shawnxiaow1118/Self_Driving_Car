@@ -15,6 +15,8 @@ Brief summary of this repository:
 * `src`: train notebook, just for reference
 * `examples` : images for this readme file
 
+Here are two demo videos of the car driving autonomously in the simulator on [track1](https://youtu.be/cHxQ6-M2bo0) and [track2](https://www.youtube.com/watch?v=0KUDThT8xf8) using trained model.
+
 ## Dependencies
 This lab requires:
 
