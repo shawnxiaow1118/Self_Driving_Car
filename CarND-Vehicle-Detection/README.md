@@ -95,3 +95,8 @@ For video images, we can keeo track of last few frames' information to get a rob
 ![car2](./examples/f8.png)
 
 ![car2](./examples/ave.png)
+
+
+
+## Discussion
+My implementation is a little bit slow at video test time, for that I search through too many windows in order to get a robust answer, which can filter out false positive. Also, the box detectd and pictured is not a perfect box, because those boxes contains the margin of the car is not likely to be classified as car, thus its count is less than the body of the car. Maybe I can use more frame and more dynamic update rule for boxes update and thresholding. Actually, the YOLO method is much better.
