@@ -60,7 +60,7 @@ We have to figure out points for left and right lines, so first we must filter o
 
 original |x gradeint |  y gradient | gradient magnitute | 
 :----------------------------:|:------------------------------:|:------------------:|:---------------|
-![Original](output_images/straight_original.png)| ![xgradient](output_images/xgrad.png)  | ![ygradeint](output_images/ygrad.png) | ![maginitute](output_images/gradmag.png)
+![Original](output_images/ori.png)| ![xgradient](output_images/xgrad.png)  | ![ygradeint](output_images/ygrad.png) | ![maginitute](output_images/gradmag.png)
 
 
 
