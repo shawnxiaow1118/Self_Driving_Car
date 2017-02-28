@@ -11,7 +11,7 @@ We are going to use traditional computer vison techniques to extract features fr
 * Store information for several frames and apply larger threshold for the consecutive video frames.
 * Draw rectangles around detected labels.
 
-Here is the link for the [project video](https://youtu.be/3eRGb3b30Fk)  You can run classify.ipynb to trian your own new classifer and use tracking.ipynb to test for your model and apply your pipeline on videos.
+Here is the link for the [project video](https://youtu.be/3eRGb3b30Fk).  You can run classify.ipynb to trian your own new classifer and use tracking.ipynb to test for your model and apply your pipeline on videos.
 
 ## Data Exploration
 The images dataset for training classifier contians 8792 cars and the number of not cars is 8968, which is quite balanced, no more processing needed for balancing. The image is of size 64x64x3. Here are some examples of images:
