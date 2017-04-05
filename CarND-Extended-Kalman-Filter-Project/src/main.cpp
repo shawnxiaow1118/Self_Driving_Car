@@ -68,7 +68,10 @@ int main(int argc, char* argv[]) {
 
   // prep the measurement packages (each line represents a measurement at a
   // timestamp)
+  int i = 0;
   while (getline(in_file_, line)) {
+    cout << i << endl;
+    i++;
 
     string sensor_type;
     MeasurementPackage meas_package;
@@ -175,6 +178,7 @@ int main(int argc, char* argv[]) {
   if (out_file_.is_open()) {
     out_file_.close();
   }
+  cout << "hihi" << endl;
 
   if (in_file_.is_open()) {
     in_file_.close();
