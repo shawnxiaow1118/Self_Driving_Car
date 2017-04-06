@@ -178,7 +178,6 @@ int main(int argc, char* argv[]) {
   if (out_file_.is_open()) {
     out_file_.close();
   }
-  cout << "hihi" << endl;
 
   if (in_file_.is_open()) {
     in_file_.close();

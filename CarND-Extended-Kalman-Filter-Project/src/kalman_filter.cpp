@@ -34,8 +34,9 @@ void KalmanFilter::Update(const VectorXd &z) {
   VectorXd zp = H_ * x_;
   MatrixXd Ht = H_.transpose();
   MatrixXd S = H_ * P_ * Ht + R_;
+  // Kalman gain
   MatrixXd K = P_ * Ht * S.inverse();
-
+  // update
   x_ = x_ + K * (z - zp);
   long x_size = x_.size();
   MatrixXd I = MatrixXd::Identity(x_size, x_size);
@@ -43,17 +44,15 @@ void KalmanFilter::Update(const VectorXd &z) {
 }
 
 void KalmanFilter::UpdateEKF(const VectorXd &z) {
-  /**
-  TODO:
-    * update the state by using Extended Kalman Filter equations
-  */
+  // transform state in  cardesian to polar coordinate system
   float ro = pow(pow(x_[0],2)+pow(x_[1],2),0.5);
   float phi = 0.0;
-  if (fabs(x_[0]) > 0.01) {
+  // two threshold can be tuned
+  if (fabs(x_[0]) > 0.05) {
     phi  = atan2(x_[1],x_[0]);
   }
   float rodot = 0.0;
-  if (fabs(phi) > 0.01) {
+  if (fabs(ro) > 0.1) {
      rodot = (x_[0]*x_[2] + x_[1]*x_[3]) / ro;
   }
 
@@ -63,6 +62,7 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
   MatrixXd Ht = H_.transpose();
   MatrixXd S = H_ * P_ * Ht + R_;
   MatrixXd K = P_ * Ht * S.inverse();
+  // using error in polar system
 
   x_ = x_ + K * (z - zp);
   long x_size = x_.size();
