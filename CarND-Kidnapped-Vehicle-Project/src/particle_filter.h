@@ -88,6 +88,12 @@ public:
 	 */
 	void updateWeights(double sensor_range, double std_landmark[], std::vector<LandmarkObs> observations,
 			Map map_landmarks);
+
+	/**
+	Help function fo calculate the multivariate gaussian distribution probability
+	*/
+
+	double getProb(double obs_x,double obs_y,double land_x,double land_y,double std_x,double std_y);
 	
 	/**
 	 * resample Resamples from the updated set of particles to form
