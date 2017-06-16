@@ -21,8 +21,8 @@ double dt = 0.08;
 // This is the length from front to CoG that has a similar radius.
 const double Lf = 2.67;
 const double ref_v = 80.0;
-const double Ccte = 1200.0;//1000.0;
-const double Cepsi = 1000.0;//1000.0;
+const double Ccte = 1200.0;
+const double Cepsi = 1200.0;
 const double Cv = 1.0;
 const double Cdelta = 100.0;
 const double Ca = 10.0;

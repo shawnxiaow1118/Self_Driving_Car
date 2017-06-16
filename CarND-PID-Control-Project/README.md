@@ -60,31 +60,18 @@ for instructions and the project rubric.
 * You don't have to follow this directory structure, but if you do, your work
   will span all of the .cpp files here. Keep an eye out for TODOs.
 
-## Call for IDE Profiles Pull Requests
+## Reflections
 
-Help your fellow students!
+P: is for instant error, this will direct the control propotional to the error directly. So larger the coefficient for P component, the most relevant control will be with the instant error, but it has the problem of overshooting.
 
-We decided to create Makefiles with cmake to keep this project as platform
-agnostic as possible. Similarly, we omitted IDE profiles in order to we ensure
-that students don't feel pressured to use one IDE or another.
+I: is for intergral, it correct the steady error in a longer period, usually it stands for the bias of the driver or simulator.
 
-However! I'd love to help people get up and running with their IDEs of choice.
-If you've created a profile for an IDE that you think other students would
-appreciate, we'd love to have you add the requisite profile files and
-instructions to ide_profiles/. For example if you wanted to add a VS Code
-profile, you'd add:
+D: is for differential part, it controls the future change based on recent change trends, it can solve the problem of overshooting in some extend.
 
-* /ide_profiles/vscode/.vscode
-* /ide_profiles/vscode/README.md
 
-The README should explain what the profile does, how to take advantage of it,
-and how to install it.
+Parameter tuning:
 
-Frankly, I've never been involved in a project with multiple IDE profiles
-before. I believe the best way to handle this would be to keep them out of the
-repo root to avoid clutter. My expectation is that most profiles will include
-instructions to copy files to a new location to get picked up by the IDE, but
-that's just a guess.
+I choose the parameters manually. First, I only determine the value of Kp, once I found the proper one, I start to increase Ki and Kd. For that the simulator has not too large bias, I choose to set the Ki as small as possible. The basic trend is consistent with what I expected. But if the Kd is too large, we will still have some oscilation problem.
 
-One last note here: regardless of the IDE used, every submitted project must
-still be compilable with cmake and make./
+
+
